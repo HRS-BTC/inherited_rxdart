@@ -10,11 +10,13 @@ class RxListener<T> extends SingleChildStatefulWidget {
     super.key,
     required this.listener,
     required this.subjectGetter,
+    this.filter,
     super.child,
   });
 
   final RxSubjectGetter<T> subjectGetter;
   final RxEventListener<T> listener;
+  final RxStateFilter<T>? filter;
 
   @override
   State<RxListener<T>> createState() => _RxListenerState<T>();
@@ -22,6 +24,7 @@ class RxListener<T> extends SingleChildStatefulWidget {
 
 class _RxListenerState<T> extends SingleChildState<RxListener<T>> {
   StreamSubscription<T>? _subscription;
+  T? _state;
 
   @override
   void initState() {
@@ -31,7 +34,23 @@ class _RxListenerState<T> extends SingleChildState<RxListener<T>> {
   }
 
   void _handleEvent(T event) {
-    widget.listener.call(context, event);
+    final needTrigger = _shouldTrigger(event);
+    if (needTrigger) {
+      widget.listener.call(context, event);
+    }
+    _state = event;
+  }
+
+  bool _shouldTrigger(T event) {
+    if (_state == null) {
+      return true;
+    }
+    if (widget.filter == null) {
+      return true;
+    }
+    final currentState = _state as T;
+    final nextState = event;
+    return widget.filter!.call(context, currentState, nextState);
   }
 
   @override

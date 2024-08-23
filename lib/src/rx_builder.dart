@@ -12,7 +12,7 @@ class RxBuilder<T> extends StatefulWidget {
   });
 
   final RxWidgetBuilder<T> builder;
-  final RxBuilderStateFilter<T>? filter;
+  final RxStateFilter<T>? filter;
   final RxBehaviorSubjectGetter<T> subjectGetter;
 
   @override
