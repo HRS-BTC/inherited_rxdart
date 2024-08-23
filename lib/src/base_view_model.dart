@@ -5,19 +5,24 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class BaseViewModel {
-  final List<StreamSubscription<dynamic>> _eventSubscriptions = [];
-  final List<Subject<dynamic>> _subjects = [];
+  @visibleForTesting
+  final List<StreamSubscription<dynamic>> eventSubscriptions = [];
+  @visibleForTesting
+  final List<Subject<dynamic>> rxSubjects = [];
 
+  @mustCallSuper
   @protected
   void registerEventHandler<T>(Subject<T> stream, RxEventHandler<T> handler) {
     final subscription = stream.listen((event) {
       handler.call(event);
     });
-    _eventSubscriptions.add(subscription);
+    eventSubscriptions.add(subscription);
   }
 
+  @protected
+  @mustCallSuper
   void closeLater(List<Subject<dynamic>> subjects) {
-    _subjects.addAll(subjects);
+    rxSubjects.addAll(subjects);
   }
 
   @mustCallSuper
@@ -25,10 +30,10 @@ abstract class BaseViewModel {
 
   @mustCallSuper
   void dispose() {
-    for (var element in _eventSubscriptions) {
+    for (var element in eventSubscriptions) {
       element.cancel();
     }
-    for (var element in _subjects) {
+    for (var element in rxSubjects) {
       element.close();
     }
   }
