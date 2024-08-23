@@ -30,62 +30,65 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider(
-        create: (BuildContext context) {
-          return CounterViewModel();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: Text(title),
-          ),
-          body: RxListener(
-            listener: (BuildContext context, event) {
-              debugPrint('event from state $event');
-            },
-            subjectGetter: (BuildContext context) {
-              return context.read<CounterViewModel>().counterState;
-            },
-            child: const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'You have pushed the button this many times:',
-                  ),
-                  TextWidget(),
-                ],
-              ),
+      create: (BuildContext context) {
+        return CounterViewModel();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(title),
+        ),
+        body: RxListener(
+          listener: (BuildContext context, event) {
+            debugPrint('event from state $event');
+          },
+          subjectGetter: (BuildContext context) {
+            return context.read<CounterViewModel>().counterState;
+          },
+          child: const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'You have pushed the button this many times:',
+                ),
+                TextWidget(),
+              ],
             ),
           ),
-          floatingActionButton: Builder(
-            builder: (context) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FloatingActionButton(
-                    onPressed: () => context
-                        .read<CounterViewModel>()
-                        .counterDecreaseEvent
-                        .add(true),
-                    tooltip: 'Decrease',
-                    child: const Icon(Icons.horizontal_rule),
-                  ),
-                  FloatingActionButton(
-                    onPressed: () => context
-                        .read<CounterViewModel>()
-                        .counterIncreaseEvent
-                        .add(true),
-                    tooltip: 'Increase',
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              );
-            }
-          ), // This trailing comma makes auto-formatting nicer for build methods.
-        ));
+        ),
+        floatingActionButton: const InteractiveButtons(),
+      ),
+    );
   }
 }
 
+class InteractiveButtons extends StatelessWidget {
+  const InteractiveButtons({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        FloatingActionButton(
+          onPressed: () =>
+              context.read<CounterViewModel>().counterDecreaseEvent.add(true),
+          tooltip: 'Decrease',
+          child: const Icon(Icons.horizontal_rule),
+        ),
+        FloatingActionButton(
+          onPressed: () =>
+              context.read<CounterViewModel>().counterIncreaseEvent.add(true),
+          tooltip: 'Increase',
+          child: const Icon(Icons.add),
+        ),
+      ],
+    );
+  }
+}
 
 class TextWidget extends StatelessWidget {
   const TextWidget({super.key});
