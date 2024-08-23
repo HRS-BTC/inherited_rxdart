@@ -1,21 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-
 import 'type.dart';
 
 class RxBuilder<T> extends StatefulWidget {
   const RxBuilder({
     super.key,
     required this.builder,
-    required this.subject,
+    required this.subjectGetter,
     this.filter,
   });
 
   final RxWidgetBuilder<T> builder;
   final RxBuilderStateFilter<T>? filter;
-  final BehaviorSubject<T> subject;
+  final RxBehaviorSubjectGetter<T> subjectGetter;
 
   @override
   State<RxBuilder<T>> createState() => _RxBuilderState<T>();
@@ -28,9 +26,10 @@ class _RxBuilderState<T> extends State<RxBuilder<T>> {
   @override
   void initState() {
     super.initState();
-    assert(widget.subject.hasValue);
-    _state = widget.subject.value;
-    _subscription = widget.subject.listen(_handleEvent);
+    final subject = widget.subjectGetter.call(context);
+    assert(subject.hasValue);
+    _state = subject.value;
+    _subscription = subject.listen(_handleEvent);
   }
 
   void _handleEvent(T event) {

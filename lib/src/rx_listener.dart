@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:nested/nested.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../inherited_rxdart.dart';
 
@@ -10,11 +9,11 @@ class RxListener<T> extends SingleChildStatefulWidget {
   const RxListener({
     super.key,
     required this.listener,
-    required this.subject,
+    required this.subjectGetter,
     super.child,
   });
 
-  final Subject<T> subject;
+  final RxSubjectGetter<T> subjectGetter;
   final RxEventListener<T> listener;
 
   @override
@@ -27,7 +26,8 @@ class _RxListenerState<T> extends SingleChildState<RxListener<T>> {
   @override
   void initState() {
     super.initState();
-    _subscription = widget.subject.listen(_handleEvent);
+    final subject = widget.subjectGetter.call(context);
+    _subscription = subject.listen(_handleEvent);
   }
 
   void _handleEvent(T event) {

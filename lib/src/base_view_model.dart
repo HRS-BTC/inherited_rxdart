@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 abstract class BaseViewModel {
   final List<StreamSubscription<dynamic>> _eventSubscriptions = [];
+  final List<Subject<dynamic>> _subjects = [];
 
   @protected
   void registerEventHandler<T>(Subject<T> stream, RxEventHandler<T> handler) {
@@ -15,6 +16,10 @@ abstract class BaseViewModel {
     _eventSubscriptions.add(subscription);
   }
 
+  void closeLater(List<Subject<dynamic>> subjects) {
+    _subjects.addAll(subjects);
+  }
+
   @mustCallSuper
   void init() {}
 
@@ -22,6 +27,9 @@ abstract class BaseViewModel {
   void dispose() {
     for (var element in _eventSubscriptions) {
       element.cancel();
+    }
+    for (var element in _subjects) {
+      element.close();
     }
   }
 }
