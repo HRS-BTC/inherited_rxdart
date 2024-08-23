@@ -45,24 +45,14 @@ class MyHomePage extends StatelessWidget {
             subjectGetter: (BuildContext context) {
               return context.read<CounterViewModel>().counterState;
             },
-            child: Center(
+            child: const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text(
+                  Text(
                     'You have pushed the button this many times:',
                   ),
-                  RxBuilder(
-                    builder: (context, state) {
-                      return Text(
-                        '$state',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      );
-                    },
-                    subjectGetter: (BuildContext context) {
-                      return context.read<CounterViewModel>().counterState;
-                    },
-                  ),
+                  TextWidget(),
                 ],
               ),
             ),
@@ -93,5 +83,25 @@ class MyHomePage extends StatelessWidget {
             }
           ), // This trailing comma makes auto-formatting nicer for build methods.
         ));
+  }
+}
+
+
+class TextWidget extends StatelessWidget {
+  const TextWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RxBuilder(
+      builder: (context, state) {
+        return Text(
+          '$state',
+          style: Theme.of(context).textTheme.headlineMedium,
+        );
+      },
+      subjectGetter: (BuildContext context) {
+        return context.read<CounterViewModel>().counterState;
+      },
+    );
   }
 }
