@@ -96,6 +96,9 @@ class TextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RxBuilder(
+      filter: (context, prev, curr) {
+        return curr % 2 == 1;
+      },
       builder: (context, state) {
         return Text(
           '$state',

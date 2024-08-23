@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'type.dart';
 
 class RxBuilder<T> extends StatefulWidget {
@@ -20,8 +21,8 @@ class RxBuilder<T> extends StatefulWidget {
 }
 
 class _RxBuilderState<T> extends State<RxBuilder<T>> {
-  StreamSubscription<T>? _subscription;
   late T _state;
+  bool _isFirstEvent = true;
 
   @override
   void initState() {
@@ -29,37 +30,38 @@ class _RxBuilderState<T> extends State<RxBuilder<T>> {
     final subject = widget.subjectGetter.call(context);
     assert(subject.hasValue);
     _state = subject.value;
-    _subscription = subject.listen(_handleEvent);
   }
 
-  void _handleEvent(T event) {
-    bool needBuild = _shouldBuild(event);
-    if (!needBuild) {
-      return;
+  bool _shouldRebuild(T state) {
+    if (_isFirstEvent) {
+      _isFirstEvent = false;
+      return false;
     }
-    setState(() {
-      _state = event;
-    });
-  }
-
-  bool _shouldBuild(T event) {
-    if (_state == event) {
+    if (_state == state) {
       return false;
     }
     if (widget.filter == null) {
       return true;
     }
-    return widget.filter!.call(context, _state, event);
+    return widget.filter!.call(context, _state, state);
   }
 
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
+  void _stateChanged(BuildContext context, T state) {
+    bool needBuild = _shouldRebuild(state);
+    if (!needBuild) {
+      return;
+    }
+    setState(() {
+      _state = state;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder.call(context, _state);
+    return RxListener(
+      listener: _stateChanged,
+      subjectGetter: widget.subjectGetter,
+      child: widget.builder.call(context, _state),
+    );
   }
 }
