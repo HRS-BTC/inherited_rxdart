@@ -10,6 +10,17 @@ abstract class BaseViewModel {
   @visibleForTesting
   final List<Subject<dynamic>> rxSubjects = [];
 
+  final PublishSubject<dynamic> stateChangedSSubject = PublishSubject();
+
+  @protected
+  @mustCallSuper
+  void registerForStateChanged(Subject<dynamic> stream) {
+    final subscription = stream.listen((event) {
+      stateChangedSSubject.add(null);
+    });
+    eventSubscriptions.add(subscription);
+  }
+
   @mustCallSuper
   @protected
   void registerEventHandler<T>(Subject<T> stream, RxEventHandler<T> handler) {
@@ -26,15 +37,15 @@ abstract class BaseViewModel {
   }
 
   @mustCallSuper
-  void init() {}
+  void init() {
+    rxSubjects.add(stateChangedSSubject);
+  }
 
   @mustCallSuper
-  void dispose() {
-    for (var element in eventSubscriptions) {
-      element.cancel();
-    }
-    for (var element in rxSubjects) {
-      element.close();
-    }
+  Future<void> dispose() async {
+    await Future.wait(eventSubscriptions.map((e) => e.cancel()));
+    await Future.wait(rxSubjects.map((e) => e.close()));
+    eventSubscriptions.clear();
+    rxSubjects.clear();
   }
 }

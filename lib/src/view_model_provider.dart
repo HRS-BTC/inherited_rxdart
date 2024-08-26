@@ -15,6 +15,16 @@ class ViewModelProvider<T extends BaseViewModel> extends StatelessWidget {
   final Widget? child;
   final bool lazy;
 
+  static VoidCallback _startListening<T extends BaseViewModel>(
+    InheritedContext<T?> element,
+    T viewModel,
+  ) {
+    final subscription = viewModel.stateChangedSSubject.listen(
+      (dynamic _) => element.markNeedsNotifyDependents(),
+    );
+    return subscription.cancel;
+  }
+
   const ViewModelProvider.value({
     super.key,
     required T value,
@@ -26,12 +36,13 @@ class ViewModelProvider<T extends BaseViewModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (_value != null) {
-      return Provider<T>.value(
+      return InheritedProvider<T>.value(
         value: _value,
+        startListening: _startListening,
         child: child,
       );
     }
-    return Provider<T>(
+    return InheritedProvider<T>(
       lazy: lazy,
       create: (context) {
         assert(_create != null);
@@ -42,6 +53,7 @@ class ViewModelProvider<T extends BaseViewModel> extends StatelessWidget {
       dispose: (context, viewModel) {
         viewModel.dispose();
       },
+      startListening: _startListening,
       child: child,
     );
   }
