@@ -20,7 +20,7 @@ class ViewModelProvider<T extends BaseViewModel> extends StatelessWidget {
     T viewModel,
   ) {
     final subscription = viewModel.stateChangedSSubject.listen(
-      (dynamic _) => element.markNeedsNotifyDependents(),
+      (_) => element.markNeedsNotifyDependents(),
     );
     return subscription.cancel;
   }
