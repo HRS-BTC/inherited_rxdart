@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
-import 'type.dart';
 
 class RxBuilder<T> extends StatefulWidget {
   const RxBuilder({
