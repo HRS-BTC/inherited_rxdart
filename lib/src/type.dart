@@ -10,3 +10,5 @@ typedef RxStateFilter<T> = bool Function(
 typedef RxSubjectGetter<T> = Subject<T> Function(BuildContext context);
 typedef RxBehaviorSubjectGetter<T> = BehaviorSubject<T> Function(
     BuildContext context);
+
+typedef RxValueSelector<T, V> = V Function(BuildContext context, T state);
