@@ -19,12 +19,14 @@ class RxConsumer<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RxListener<T>(
-      listener: (context, value) => listener?.call(context, value),
+      listener: (context, value) {
+        return listener?.call(context, value);
+      },
       subjectGetter: subjectGetter,
       child: RxBuilder<T>(
-        builder: builder,
         filter: filter,
         subjectGetter: subjectGetter,
+        builder: builder,
       ),
     );
   }
