@@ -43,7 +43,7 @@ class MyHomePage extends StatelessWidget {
             debugPrint('event from state $event');
           },
           subjectGetter: (BuildContext context) {
-            return context.read<CounterViewModel>().counterState;
+            return context.read<CounterViewModel>().output.counterState;
           },
           child: const Center(
             child: Column(
@@ -75,13 +75,13 @@ class InteractiveButtons extends StatelessWidget {
       children: [
         FloatingActionButton(
           onPressed: () =>
-              context.read<CounterViewModel>().counterDecreaseEvent.add(true),
+              context.read<CounterViewModel>().input.counterDecreaseEvent.add(true),
           tooltip: 'Decrease',
           child: const Icon(Icons.horizontal_rule),
         ),
         FloatingActionButton(
           onPressed: () =>
-              context.read<CounterViewModel>().counterIncreaseEvent.add(true),
+              context.read<CounterViewModel>().input.counterIncreaseEvent.add(true),
           tooltip: 'Increase',
           child: const Icon(Icons.add),
         ),
@@ -106,7 +106,7 @@ class TextWidget extends StatelessWidget {
         );
       },
       subjectGetter: (BuildContext context) {
-        return context.read<CounterViewModel>().counterState;
+        return context.read<CounterViewModel>().output.counterState;
       },
     );
   }

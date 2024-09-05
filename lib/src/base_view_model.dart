@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:inherited_rxdart/src/type.dart';
+import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'package:meta/meta.dart';
-import 'package:rxdart/rxdart.dart';
 
 abstract class BaseViewModel {
   @visibleForTesting
@@ -34,6 +33,14 @@ abstract class BaseViewModel {
   @mustCallSuper
   void closeLater(List<Subject<dynamic>> subjects) {
     rxSubjects.addAll(subjects);
+  }
+
+  @protected
+  @mustCallSuper
+  void closeReleasableLater(List<ReleasableSubjects> subjects) {
+    for (var element in subjects) {
+      rxSubjects.addAll(element.subjects);
+    }
   }
 
   @mustCallSuper

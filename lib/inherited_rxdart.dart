@@ -9,3 +9,4 @@ export 'src/rx_builder.dart';
 export 'src/rx_listener.dart';
 export 'src/rx_consumer.dart';
 export 'src/rx_selector.dart';
+export 'src/releasable_subjects.dart';
