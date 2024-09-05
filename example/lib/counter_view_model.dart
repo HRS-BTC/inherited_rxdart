@@ -37,9 +37,9 @@ class CounterViewModel extends BaseViewModel {
     output = Output(
       BehaviorSubject.seeded(initialState),
     );
+    closeReleasableLater([input, output]);
     registerEventHandler(input.counterIncreaseEvent, _handleIncreaseCounter);
     registerEventHandler(input.counterDecreaseEvent, _handleDecreaseCounter);
-    closeReleasableLater([input, output]);
   }
 
   void _handleIncreaseCounter(bool event) {

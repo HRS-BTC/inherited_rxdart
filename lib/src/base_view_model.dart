@@ -22,7 +22,7 @@ abstract class BaseViewModel {
 
   @mustCallSuper
   @protected
-  void registerEventHandler<T>(Subject<T> stream, RxEventHandler<T> handler) {
+  void registerEventHandler<T>(Stream<T> stream, RxEventHandler<T> handler) {
     final subscription = stream.listen((event) {
       handler.call(event);
     });
