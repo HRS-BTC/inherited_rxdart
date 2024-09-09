@@ -70,8 +70,7 @@ abstract class BaseViewModel {
     }
   }
 
-  /// Override this for performing initialization when widget's mounted and
-  /// [State.initState] is called.
+  /// Override this for performing initialization when widget's mounted.
   @mustCallSuper
   void init() {
     rxSubjects.add(stateChangedSubject);
