@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'package:nested/nested.dart';
 import 'package:collection/collection.dart';
+import 'type.dart';
+import 'rx_listener.dart';
 
 class MultiRxBuilder extends StatefulWidget {
   const MultiRxBuilder({

@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
 
-class ViewModelProvider<T extends BaseViewModel> extends StatelessWidget {
+/// Widget for injecting [BaseViewModel] to a subtree
+class ViewModelProvider<T extends BaseViewModel> extends SingleChildStatelessWidget {
   const ViewModelProvider({
     super.key,
     required Create<T> create,
-    this.child,
+    super.child,
     this.lazy = false,
   })  : _create = create,
         _value = null;
 
   final Create<T>? _create;
   final T? _value;
-  final Widget? child;
   final bool lazy;
 
   static VoidCallback _startListening<T extends BaseViewModel>(
@@ -28,13 +28,13 @@ class ViewModelProvider<T extends BaseViewModel> extends StatelessWidget {
   const ViewModelProvider.value({
     super.key,
     required T value,
-    this.child,
+    super.child,
   })  : _create = null,
         _value = value,
         lazy = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWithChild(BuildContext context, Widget? child) {
     if (_value != null) {
       return InheritedProvider<T>.value(
         value: _value,
