@@ -12,3 +12,5 @@ typedef RxBehaviorSubjectGetter<T> = BehaviorSubject<T> Function(
     BuildContext context);
 
 typedef RxValueSelector<T, V> = V Function(BuildContext context, T state);
+
+typedef RxMultiSubjectsGetter = List<Stream<dynamic>> Function(BuildContext context);
