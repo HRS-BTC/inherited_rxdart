@@ -19,7 +19,7 @@ class ViewModelProvider<T extends BaseViewModel> extends StatelessWidget {
     InheritedContext<T?> element,
     T viewModel,
   ) {
-    final subscription = viewModel.stateChangedSSubject.listen(
+    final subscription = viewModel.stateChangedSubject.listen(
       (_) => element.markNeedsNotifyDependents(),
     );
     return subscription.cancel;

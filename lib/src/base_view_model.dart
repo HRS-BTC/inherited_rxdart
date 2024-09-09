@@ -3,21 +3,23 @@ import 'dart:async';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'package:meta/meta.dart';
 
+/// Base class for view model, extending this often required
 abstract class BaseViewModel {
   @visibleForTesting
-  final List<StreamSubscription<dynamic>> eventSubscriptions = [];
+  final CompositeSubscription compositeSubscription = CompositeSubscription();
+
   @visibleForTesting
   final List<Subject<dynamic>> rxSubjects = [];
 
-  final PublishSubject<dynamic> stateChangedSSubject = PublishSubject();
+  final PublishSubject<dynamic> stateChangedSubject = PublishSubject();
 
   @protected
   @mustCallSuper
   void registerForStateChanged(Subject<dynamic> stream) {
     final subscription = stream.listen((event) {
-      stateChangedSSubject.add(null);
+      stateChangedSubject.add(null);
     });
-    eventSubscriptions.add(subscription);
+    compositeSubscription.add(subscription);
   }
 
   @mustCallSuper
@@ -26,7 +28,7 @@ abstract class BaseViewModel {
     final subscription = stream.listen((event) {
       handler.call(event);
     });
-    eventSubscriptions.add(subscription);
+    compositeSubscription.add(subscription);
   }
 
   @protected
@@ -45,14 +47,13 @@ abstract class BaseViewModel {
 
   @mustCallSuper
   void init() {
-    rxSubjects.add(stateChangedSSubject);
+    rxSubjects.add(stateChangedSubject);
   }
 
   @mustCallSuper
   Future<void> dispose() async {
-    await Future.wait(eventSubscriptions.map((e) => e.cancel()));
+    await compositeSubscription.cancel();
     await Future.wait(rxSubjects.map((e) => e.close()));
-    eventSubscriptions.clear();
     rxSubjects.clear();
   }
 }
