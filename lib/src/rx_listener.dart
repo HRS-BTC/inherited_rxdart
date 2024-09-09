@@ -26,12 +26,33 @@ class _RxListenerState<T> extends SingleChildState<RxListener<T>> {
   StreamSubscription<T>? _subscription;
   T? _state;
   bool _isFirstEvent = true;
+  late final Stream<T> subject;
 
   @override
   void initState() {
     super.initState();
-    final subject = widget.subjectGetter.call(context);
+    subject = widget.subjectGetter.call(context);
+    _subscribe(subject);
+  }
+
+  @override
+  void didUpdateWidget(covariant RxListener<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.subjectGetter != oldWidget.subjectGetter) {
+      final newSubject = widget.subjectGetter.call(context);
+      if (newSubject != subject) {
+        _unsubscribe();
+        _subscribe(newSubject);
+      }
+    }
+  }
+
+  void _subscribe(Stream<T> subject) {
     _subscription = subject.listen(_handleEvent);
+  }
+
+  void _unsubscribe() {
+    _subscription?.cancel();
   }
 
   void _handleEvent(T event) {
@@ -57,7 +78,7 @@ class _RxListenerState<T> extends SingleChildState<RxListener<T>> {
 
   @override
   void dispose() {
-    _subscription?.cancel();
+    _unsubscribe();
     super.dispose();
   }
 
