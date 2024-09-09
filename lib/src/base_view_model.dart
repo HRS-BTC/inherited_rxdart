@@ -78,7 +78,7 @@ abstract class BaseViewModel {
   }
 
   /// Release previously registered resources, override this to perform clean
-  /// up as needed
+  /// up as needed.
   @mustCallSuper
   Future<void> dispose() async {
     await compositeSubscription.cancel();
