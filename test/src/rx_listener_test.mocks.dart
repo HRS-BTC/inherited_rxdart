@@ -33,4 +33,20 @@ class MockRxListenerHelper<T> extends _i1.Mock
         ),
         returnValueForMissingStub: null,
       );
+
+  @override
+  void dualNumberCall(
+    T? a,
+    T? b,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #dualNumberCall,
+          [
+            a,
+            b,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

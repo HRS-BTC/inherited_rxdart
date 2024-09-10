@@ -8,6 +8,8 @@ import 'rx_listener_test.mocks.dart';
 
 abstract class RxListenerHelper<T> {
   void trigger(T value);
+
+  void dualNumberCall(T a, T b);
 }
 
 @GenerateNiceMocks([MockSpec<RxListenerHelper>()])
@@ -38,8 +40,31 @@ void main() {
       }
       await subject.close();
       verifyInOrder(events.map((e) => helper.trigger(e)).toList());
+      verifyNoMoreInteractions(helper);
     });
 
+    testWidgets("trigger listener filtered first time has same prev and curr", (tester) async {
+      await tester.pumpWidget(
+        RxListener(
+          filter: (context, prev, curr) {
+            helper.dualNumberCall(prev, curr);
+            return true;
+          },
+          listener: (context, state) {
+            helper.trigger(state);
+          },
+          subjectGetter: (_) => subject,
+          child: const SizedBox(),
+        ),
+      );
+
+      const event = 5;
+      subject.add(event);
+      await subject.close();
+      verify(helper.dualNumberCall(event, event)).called(1);
+      verify(helper.trigger(event)).called(1);
+      verifyNoMoreInteractions(helper);
+    });
     testWidgets("trigger listener filtered", (tester) async {
       bool filterCond(int value) => value % 10 == 0;
       await tester.pumpWidget(
@@ -64,7 +89,10 @@ void main() {
       final expectedList = events.where(filterCond);
       final notExpectedList = events.whereNot(filterCond);
       verifyInOrder(expectedList.map((e) => helper.trigger(e)).toList());
-      notExpectedList.map((e) => verifyNever(helper.trigger(e)));
+      for (var e in notExpectedList) {
+        verifyNever(helper.trigger(e));
+      }
+      verifyNoMoreInteractions(helper);
     });
   });
 
@@ -105,5 +133,6 @@ void main() {
     for (var element in events1) {
       verifyNever(helper.trigger(element));
     }
+    verifyNoMoreInteractions(helper);
   });
 }
