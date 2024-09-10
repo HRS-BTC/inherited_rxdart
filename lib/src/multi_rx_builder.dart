@@ -4,6 +4,8 @@ import 'package:collection/collection.dart';
 import 'type.dart';
 import 'rx_listener.dart';
 
+/// Serve as a way to subscribe to multiple [Stream] at once, and will trigger
+/// the [builder] function when new event emitted
 class MultiRxBuilder extends StatefulWidget {
   const MultiRxBuilder({
     super.key,
@@ -11,7 +13,11 @@ class MultiRxBuilder extends StatefulWidget {
     required this.subjectsGetter,
   });
 
+  /// Re-trigger when new [Stream]s's event fired. The retrieval of data needed
+  /// to build is to be acquired in this function
   final WidgetBuilder builder;
+
+  /// Retrieve [Stream]s to subscribe to trigger rebuilds
   final RxMultiSubjectsGetter subjectsGetter;
 
   @override

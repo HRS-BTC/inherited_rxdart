@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../inherited_rxdart.dart';
 
+/// Combination of [RxBuilder] and [RxListener] for easier handle changed from
+/// a single [BehaviorSubject]
 class RxConsumer<T> extends StatelessWidget {
   const RxConsumer({
     super.key,
@@ -11,9 +13,16 @@ class RxConsumer<T> extends StatelessWidget {
     this.filter,
   });
 
+  /// See [RxBuilder.builder]
   final RxWidgetBuilder<T> builder;
+
+  /// See [RxBuilder.subjectGetter]
   final RxBehaviorSubjectGetter<T> subjectGetter;
+
+  /// See [RxListener.listener]
   final RxEventListener<T>? listener;
+
+  /// See [RxListener.filter]
   final RxStateFilter<T>? filter;
 
   @override

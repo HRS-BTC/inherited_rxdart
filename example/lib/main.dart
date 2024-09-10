@@ -74,14 +74,20 @@ class InteractiveButtons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         FloatingActionButton(
-          onPressed: () =>
-              context.read<CounterViewModel>().input.counterDecreaseEvent.add(true),
+          onPressed: () => context
+              .read<CounterViewModel>()
+              .input
+              .counterDecreaseEvent
+              .add(true),
           tooltip: 'Decrease',
           child: const Icon(Icons.horizontal_rule),
         ),
         FloatingActionButton(
-          onPressed: () =>
-              context.read<CounterViewModel>().input.counterIncreaseEvent.add(true),
+          onPressed: () => context
+              .read<CounterViewModel>()
+              .input
+              .counterIncreaseEvent
+              .add(true),
           tooltip: 'Increase',
           child: const Icon(Icons.add),
         ),

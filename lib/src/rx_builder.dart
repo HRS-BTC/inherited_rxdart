@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
 
+/// Subscribe to a [BehaviorSubject.seeded] and use its [BehaviorSubject.value]
+/// to build UI correspondingly.
 class RxBuilder<T> extends StatefulWidget {
   const RxBuilder({
     super.key,
@@ -9,8 +11,19 @@ class RxBuilder<T> extends StatefulWidget {
     this.filter,
   });
 
+  /// Current and updated values of [BehaviorSubject] will trigger the
+  /// rebuilding and provide current value as a parameter for building UI
   final RxWidgetBuilder<T> builder;
+
+  /// Similar to [RxListener.filter], used for subscribing to certain aspect
+  /// of the whole state object to rebuild.
   final RxStateFilter<T>? filter;
+
+  /// Retrieval for a [BehaviorSubject.seeded], or generally, a [BehaviorSubject]
+  /// with [BehaviorSubject.hasValue] equal to [true]. This is needed to
+  /// warrant the widget building behavior, since all building operation inside
+  /// the framework are done in a asynchronous way, data, or state, used for
+  /// rendering must exist first.
   final RxBehaviorSubjectGetter<T> subjectGetter;
 
   @override

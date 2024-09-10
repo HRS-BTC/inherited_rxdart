@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:js';
 
 import 'package:flutter/cupertino.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';

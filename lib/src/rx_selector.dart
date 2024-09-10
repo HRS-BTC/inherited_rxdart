@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
 
+/// Shortcut for subscribing only to changes belong to a subset of properties of
+/// state object
 class RxSelector<T, V> extends StatelessWidget {
   const RxSelector({
     super.key,
@@ -9,8 +11,14 @@ class RxSelector<T, V> extends StatelessWidget {
     required this.builder,
   });
 
+  /// See [RxBuilder.builder]
   final RxWidgetBuilder<V> builder;
+
+  /// See [RxBuilder.subjectGetter]
   final RxBehaviorSubjectGetter<T> subjectGetter;
+
+  /// Similar to [RxBuilder.filter] but will automatically compare changed
+  /// computed value derived from state changes
   final RxValueSelector<T, V> valueSelector;
 
   @override

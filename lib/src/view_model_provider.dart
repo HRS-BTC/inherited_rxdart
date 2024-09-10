@@ -8,7 +8,6 @@ import 'package:inherited_rxdart/inherited_rxdart.dart';
 /// other by the use of [Nested]
 class ViewModelProvider<T extends BaseViewModel>
     extends SingleChildStatelessWidget {
-
   /// Create a new [BaseViewModel], calling [BaseViewModel.init] and
   /// inject it to the [child] subtree. When this widget is dismounted,
   /// [BaseViewModel.dispose] will be called and release resources accordingly.
@@ -37,6 +36,7 @@ class ViewModelProvider<T extends BaseViewModel>
 
   final Create<T>? _create;
   final T? _value;
+
   /// Whether to immediately create the [BaseViewModel] in case of using
   /// [ViewModelProvider] or wait until the first time it's required through the
   /// use of [context.read] (or [context.watch])

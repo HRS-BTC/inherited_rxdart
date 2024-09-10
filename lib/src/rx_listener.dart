@@ -20,8 +20,10 @@ class RxListener<T> extends SingleChildStatefulWidget {
 
   /// Retrieving the [Stream] to subscribe to
   final RxSubjectGetter<T> subjectGetter;
+
   /// Each [Stream] event will be called here
   final RxEventListener<T> listener;
+
   /// Whether to call [listener] based on the result of this function, this can
   /// be used to filter interested properties changes only
   final RxStateFilter<T>? filter;
