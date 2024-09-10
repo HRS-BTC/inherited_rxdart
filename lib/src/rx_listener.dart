@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:nested/nested.dart';
 
 import '../inherited_rxdart.dart';
 
+/// Widget to perform subscribing, and auto dispose of the subscription of a
+/// [Stream], or preferably a [Subject]
+/// This is best used to respond to a event that is not related to building UI
+/// for example: [showDialog], [Navigator.push]. This widget will then act as a
+/// trigger to perform some action controlled from inside the [BaseViewModel]
 class RxListener<T> extends SingleChildStatefulWidget {
   const RxListener({
     super.key,
@@ -14,8 +18,12 @@ class RxListener<T> extends SingleChildStatefulWidget {
     super.child,
   });
 
+  /// Retrieving the [Stream] to subscribe to
   final RxSubjectGetter<T> subjectGetter;
+  /// Each [Stream] event will be called here
   final RxEventListener<T> listener;
+  /// Whether to call [listener] based on the result of this function, this can
+  /// be used to filter interested properties changes only
   final RxStateFilter<T>? filter;
 
   @override
