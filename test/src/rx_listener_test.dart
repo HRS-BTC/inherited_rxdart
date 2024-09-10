@@ -43,7 +43,7 @@ void main() {
       verifyNoMoreInteractions(helper);
     });
 
-    testWidgets("trigger listener filtered first time has same prev and curr", (tester) async {
+    testWidgets("trigger listener filtered first time has null prev", (tester) async {
       await tester.pumpWidget(
         RxListener(
           filter: (context, prev, curr) {
@@ -61,10 +61,11 @@ void main() {
       const event = 5;
       subject.add(event);
       await subject.close();
-      verify(helper.dualNumberCall(event, event)).called(1);
+      verify(helper.dualNumberCall(null, event)).called(1);
       verify(helper.trigger(event)).called(1);
       verifyNoMoreInteractions(helper);
     });
+
     testWidgets("trigger listener filtered", (tester) async {
       bool filterCond(int value) => value % 10 == 0;
       await tester.pumpWidget(

@@ -23,7 +23,7 @@ class RxConsumer<T> extends StatelessWidget {
   final RxEventListener<T>? listener;
 
   /// See [RxListener.filter]
-  final RxStateFilter<T>? filter;
+  final RxBuilderStateFilter<T>? filter;
 
   @override
   Widget build(BuildContext context) {

@@ -10,9 +10,14 @@ typedef RxEventListener<T> = void Function(BuildContext context, T event);
 /// Signature for building widget with states from the BehaviorSubject
 typedef RxWidgetBuilder<T> = Widget Function(BuildContext context, T event);
 
-/// Signature for selecting which state changes to respond to, either for
-/// callback or building widgets
-typedef RxStateFilter<T> = bool Function(
+/// Signature for selecting which state changes to respond to, for callbacks
+/// of listener
+typedef RxListenerStateFilter<T> = bool Function(
+    BuildContext context, T? previous, T current);
+
+/// Signature for selecting which state changes to respond to, for building
+/// widgets
+typedef RxBuilderStateFilter<T> = bool Function(
     BuildContext context, T previous, T current);
 
 /// Signature for getting [Stream], commonly used for [PublishSubject]

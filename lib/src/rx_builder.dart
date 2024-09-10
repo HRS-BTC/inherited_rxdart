@@ -17,7 +17,7 @@ class RxBuilder<T> extends StatefulWidget {
 
   /// Similar to [RxListener.filter], used for subscribing to certain aspect
   /// of the whole state object to rebuild.
-  final RxStateFilter<T>? filter;
+  final RxBuilderStateFilter<T>? filter;
 
   /// Retrieval for a [BehaviorSubject.seeded], or generally, a [BehaviorSubject]
   /// with [BehaviorSubject.hasValue] equal to [true]. This is needed to
@@ -38,7 +38,8 @@ class _RxBuilderState<T> extends State<RxBuilder<T>> {
   void initState() {
     super.initState();
     final subject = widget.subjectGetter.call(context);
-    assert(subject.hasValue);
+    assert(subject.hasValue, "The behavior subject must be seeded before"
+        "passed into this widget");
     _state = subject.value;
   }
 

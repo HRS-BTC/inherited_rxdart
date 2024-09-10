@@ -26,7 +26,10 @@ class RxListener<T> extends SingleChildStatefulWidget {
 
   /// Whether to call [listener] based on the result of this function, this can
   /// be used to filter interested properties changes only
-  final RxStateFilter<T>? filter;
+  /// The first call of this function will have previous state parameter null,
+  /// since we do allow for subscribing to [Stream], hence the first state is
+  /// not always available.
+  final RxListenerStateFilter<T>? filter;
 
   @override
   State<RxListener<T>> createState() => _RxListenerState<T>();
@@ -76,13 +79,7 @@ class _RxListenerState<T> extends SingleChildState<RxListener<T>> {
     if (widget.filter == null) {
       return true;
     }
-    T currentState;
-    if(_state == null) {
-      currentState = event;
-    }else {
-      currentState = _state as T;
-    }
-
+    T? currentState = _state;
     final nextState = event;
     return widget.filter!.call(context, currentState, nextState);
   }
