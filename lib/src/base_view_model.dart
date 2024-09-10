@@ -31,6 +31,7 @@ abstract class BaseViewModel {
   /// Register a [Stream] as a part of this [BaseViewModel] identity, represented
   /// by [stateChangedSubject]
   @protected
+  @visibleForTesting
   @mustCallSuper
   void registerForStateChanged(Stream<dynamic> stream) {
     final subscription = stream.listen((event) {
@@ -41,8 +42,9 @@ abstract class BaseViewModel {
 
   /// Commonly used for register event handler for [Stream], or [PublishSubject],
   /// will auto dispose the subscription with [compositeSubscription]
-  @mustCallSuper
   @protected
+  @visibleForTesting
+  @mustCallSuper
   void registerEventHandler<T>(Stream<T> stream, RxEventHandler<T> handler) {
     final subscription = stream.listen((event) {
       handler.call(event);
@@ -53,6 +55,7 @@ abstract class BaseViewModel {
   /// Used for registering a subjects for disposing later. This should be used
   /// on user defined [Subject] in [BaseViewModel]
   @protected
+  @visibleForTesting
   @mustCallSuper
   void closeLater(List<Subject<dynamic>> subjects) {
     rxSubjects.addAll(subjects);
@@ -62,6 +65,7 @@ abstract class BaseViewModel {
   /// [Subject]s as properties, register them here to release all of those
   /// [Subject]s
   @protected
+  @visibleForTesting
   @mustCallSuper
   void closeReleasableLater(List<ReleasableSubjects> subjects) {
     for (var element in subjects) {
@@ -81,6 +85,5 @@ abstract class BaseViewModel {
   Future<void> dispose() async {
     await compositeSubscription.cancel();
     await Future.wait(rxSubjects.map((e) => e.close()));
-    rxSubjects.clear();
   }
 }
