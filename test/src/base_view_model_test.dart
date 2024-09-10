@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -101,24 +100,16 @@ void main() {
     }
   });
 
-  test("register event handler", () {
+  test("register event handler", () async {
     const event = 50;
     final handler = MockHandler<int>();
     final subject = PublishSubject<int>();
     final compositeSubs = vm.compositeSubscription;
 
-    addTearDown(() {
-      subject.close();
-    });
-
     vm.registerEventHandler(subject, handler.handle);
     subject.add(event);
-
+    await subject.close();
     expect(compositeSubs.length, 1);
-    StreamSubscription<int>? subs;
-    subs = subject.listen((value) {
-      verify(handler.handle(event)).called(1);
-      subs?.cancel();
-    });
+    verify(handler.handle(event)).called(1);
   });
 }
