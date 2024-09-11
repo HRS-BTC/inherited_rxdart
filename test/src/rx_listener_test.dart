@@ -4,13 +4,9 @@ import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../fixture/rx_listener_helper.dart';
 import 'rx_listener_test.mocks.dart';
 
-abstract class RxListenerHelper<T> {
-  void trigger(T value);
-
-  void dualNumberCall(T a, T b);
-}
 
 @GenerateNiceMocks([MockSpec<RxListenerHelper>()])
 void main() {
