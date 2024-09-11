@@ -2,23 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class BuilderWidgetTest extends StatelessWidget {
-  const BuilderWidgetTest({super.key, required this.value});
+import '../fixture/show_counter.dart';
 
-  final int value;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: Scaffold(
-        body: Center(
-          child: Text(value.toString()),
-        ),
-      ),
-    );
-  }
-}
 
 void main() {
   late BehaviorSubject<int> subject;
@@ -36,7 +21,7 @@ void main() {
     await tester.pumpWidget(
       RxBuilder(
         builder: (context, state) {
-          return BuilderWidgetTest(value: state);
+          return ShowCounterTest(value: state);
         },
         subjectGetter: (_) => unSeededSubject,
       ),
@@ -51,7 +36,7 @@ void main() {
     await tester.pumpWidget(
       RxBuilder(
         builder: (context, state) {
-          return BuilderWidgetTest(value: state);
+          return ShowCounterTest(value: state);
         },
         subjectGetter: (_) => subject,
       ),
@@ -67,7 +52,7 @@ void main() {
     await tester.pumpWidget(
       RxBuilder(
         builder: (context, state) {
-          return BuilderWidgetTest(value: state);
+          return ShowCounterTest(value: state);
         },
         subjectGetter: (_) => subject,
       ),
@@ -90,7 +75,7 @@ void main() {
           return renderCond.call(curr);
         },
         builder: (context, state) {
-          return BuilderWidgetTest(value: state);
+          return ShowCounterTest(value: state);
         },
         subjectGetter: (_) => subject,
       ),

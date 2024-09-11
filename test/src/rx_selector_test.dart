@@ -2,28 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
 
-class SelectorWidgetTest extends StatelessWidget {
-  const SelectorWidgetTest({super.key, required this.value});
-
-  final int value;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(value.toString()),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+import '../fixture/show_counter.dart';
 
 class ValueObject {
   final int a;
@@ -53,7 +32,7 @@ void main() {
     await tester.pumpWidget(
       RxSelector(
         builder: (context, state) {
-          return SelectorWidgetTest(value: state);
+          return ShowCounterTest(value: state);
         },
         subjectGetter: (_) => subject,
         valueSelector: (BuildContext context, ValueObject state) {
@@ -72,7 +51,7 @@ void main() {
     await tester.pumpWidget(
       RxSelector(
         builder: (context, state) {
-          return SelectorWidgetTest(value: state);
+          return ShowCounterTest(value: state);
         },
         subjectGetter: (_) => subject,
         valueSelector: (BuildContext context, ValueObject state) {

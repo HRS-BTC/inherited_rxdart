@@ -25,7 +25,7 @@ class MultiRxBuilder extends StatefulWidget {
 }
 
 class _MultiRxBuilderState extends State<MultiRxBuilder> {
-  late final List<Stream<dynamic>> subjects;
+  late List<Stream<dynamic>> subjects;
   final listEq = const ListEquality();
   final stateKey = GlobalKey();
 
