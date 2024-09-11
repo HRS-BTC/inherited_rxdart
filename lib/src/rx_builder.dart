@@ -38,7 +38,9 @@ class _RxBuilderState<T> extends State<RxBuilder<T>> {
   void initState() {
     super.initState();
     final subject = widget.subjectGetter.call(context);
-    assert(subject.hasValue, "The behavior subject must be seeded before"
+    assert(
+        subject.hasValue,
+        "The behavior subject must be seeded before"
         "passed into this widget");
     _state = subject.value;
   }

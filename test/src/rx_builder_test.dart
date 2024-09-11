@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../fixture/show_counter.dart';
-
 
 void main() {
   late BehaviorSubject<int> subject;
@@ -67,7 +65,7 @@ void main() {
     const nextValue = 1;
     final expectedText = subject.value.toString();
     final notExpectedText = nextValue.toString();
-    bool renderCond(int value) => value % 2 ==0;
+    bool renderCond(int value) => value % 2 == 0;
 
     await tester.pumpWidget(
       RxBuilder(

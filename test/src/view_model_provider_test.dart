@@ -66,7 +66,7 @@ void main() {
     );
     subject.add(null);
   });
-  
+
   group("dispose view model", () {
     testWidgets("dispose created vm", (tester) async {
       await tester.pumpWidget(

@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import '../fixture/rx_listener_helper.dart';
 import 'rx_listener_test.mocks.dart';
 
-
 @GenerateNiceMocks([MockSpec<RxListenerHelper>()])
 void main() {
   late PublishSubject<int> subject;
@@ -39,7 +38,8 @@ void main() {
       verifyNoMoreInteractions(helper);
     });
 
-    testWidgets("trigger listener filtered first time has null prev", (tester) async {
+    testWidgets("trigger listener filtered first time has null prev",
+        (tester) async {
       await tester.pumpWidget(
         RxListener(
           filter: (context, prev, curr) {
