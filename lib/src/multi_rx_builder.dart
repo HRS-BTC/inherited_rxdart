@@ -27,6 +27,7 @@ class MultiRxBuilder extends StatefulWidget {
 class _MultiRxBuilderState extends State<MultiRxBuilder> {
   late final List<Stream<dynamic>> subjects;
   final listEq = const ListEquality();
+  final stateKey = GlobalKey();
 
   @override
   void initState() {
@@ -61,7 +62,11 @@ class _MultiRxBuilderState extends State<MultiRxBuilder> {
           );
         },
       ),
-      child: widget.builder.call(context),
+      child: KeyedSubtree(
+        // prevent state lost when re-position node-wise
+        key: stateKey,
+        child: widget.builder.call(context),
+      ),
     );
   }
 }
