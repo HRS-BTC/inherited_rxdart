@@ -50,9 +50,10 @@ class _RxBuilderState<T> extends State<RxBuilder<T>> {
       _isFirstEvent = false;
       return false;
     }
-    if (_state == state) {
-      return false;
-    }
+    // temporarily disable this optimization in favor of mutable model
+    // if (_state == state) {
+    //   return false;
+    // }
     if (widget.filter == null) {
       return true;
     }
