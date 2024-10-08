@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:nested/nested.dart';
+import 'package:inherited_rxdart/inherited_rxdart.dart';
 import 'package:collection/collection.dart';
-import 'type.dart';
-import 'rx_listener.dart';
+
+import 'holder.dart';
 
 /// Serve as a way to subscribe to multiple [Stream] at once, and will trigger
 /// the [builder] function when new event emitted
@@ -15,7 +17,7 @@ class MultiRxBuilder extends StatefulWidget {
 
   /// Re-trigger when new [Stream]s's event fired. The retrieval of data needed
   /// to build is to be acquired in this function
-  final WidgetBuilder builder;
+  final RxMultiSubjectsBuilder builder;
 
   /// Retrieve [Stream]s to subscribe to trigger rebuilds
   final RxMultiSubjectsGetter subjectsGetter;
@@ -25,14 +27,23 @@ class MultiRxBuilder extends StatefulWidget {
 }
 
 class _MultiRxBuilderState extends State<MultiRxBuilder> {
-  late List<Stream<dynamic>> subjects;
-  final listEq = const ListEquality();
-  final stateKey = GlobalKey();
+  late List<BehaviorSubject<Object?>> _subjects;
+  List<Holder> _states = [];
+  final _listEq = const ListEquality();
+  StreamSubscription? subs;
 
   @override
   void initState() {
     super.initState();
-    subjects = widget.subjectsGetter.call(context);
+    _subjects = widget.subjectsGetter.call(context);
+    _updateStates(_subjects);
+    _subscribe(_subjects);
+  }
+
+  @override
+  void dispose() {
+    _unsubscribe();
+    super.dispose();
   }
 
   @override
@@ -40,33 +51,38 @@ class _MultiRxBuilderState extends State<MultiRxBuilder> {
     super.didUpdateWidget(oldWidget);
     if (widget.subjectsGetter != oldWidget.subjectsGetter) {
       final newSubjects = widget.subjectsGetter.call(context);
-      if (!listEq.equals(newSubjects, subjects)) {
-        subjects = newSubjects;
+      if (!_listEq.equals(newSubjects, _subjects)) {
+        _unsubscribe();
+        _subjects = newSubjects;
+        _subscribe(newSubjects);
       }
     }
   }
 
-  void _update() {
-    setState(() {});
+  void _subscribe(List<BehaviorSubject<Object?>> subjects) {
+    final stream = Rx.combineLatest<Object?, List<Holder>>(subjects, (states) {
+      return states.map((e) => Holder(e)).toList();
+    });
+    _updateStates(subjects);
+    subs = stream.listen(_update);
+  }
+
+  void _unsubscribe() {
+    subs?.cancel();
+  }
+
+  void _updateStates(List<BehaviorSubject<Object?>> subjects) {
+    _states = subjects.map((e) => Holder(e.value)).toList();
+  }
+
+  void _update(List<Holder> states) {
+    setState(() {
+      _states = states;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Nested(
-      children: List.generate(
-        subjects.length,
-        (index) {
-          return RxListener(
-            listener: (_, __) => _update(),
-            subjectGetter: (_) => subjects[index],
-          );
-        },
-      ),
-      child: KeyedSubtree(
-        // prevent state lost when re-position node-wise
-        key: stateKey,
-        child: widget.builder.call(context),
-      ),
-    );
+    return widget.builder.call(context, _states);
   }
 }

@@ -13,3 +13,4 @@ export 'src/rx_consumer.dart';
 export 'src/rx_selector.dart';
 export 'src/releasable_subjects.dart';
 export 'src/multi_rx_builder.dart';
+export 'src/holder.dart';

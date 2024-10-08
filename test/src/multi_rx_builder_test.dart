@@ -19,8 +19,8 @@ void main() {
 
     await tester.pumpWidget(
       MultiRxBuilder(
-        builder: (context) {
-          final state = subjects[selectedIndex].value;
+        builder: (context, states) {
+          final state = states[selectedIndex].cast<int>();
           return ShowCounterTest(value: state);
         },
         subjectsGetter: (BuildContext context) {
@@ -39,8 +39,8 @@ void main() {
 
     await tester.pumpWidget(
       MultiRxBuilder(
-        builder: (context) {
-          final state = subjects[selectedIndex].value;
+        builder: (context, states) {
+          final state = states[selectedIndex].cast<int>();
           return ShowCounterTest(value: state);
         },
         subjectsGetter: (BuildContext context) {
@@ -69,8 +69,8 @@ void main() {
 
     await tester.pumpWidget(
       MultiRxBuilder(
-        builder: (context) {
-          final state = subjects[selectedIndex].value;
+        builder: (context, states) {
+          final state = states[selectedIndex].cast<int>();
           return ShowCounterTest(value: state);
         },
         subjectsGetter: (BuildContext context) {
@@ -80,8 +80,8 @@ void main() {
     );
     await tester.pumpWidget(
       MultiRxBuilder(
-        builder: (context) {
-          final state = newSubjects[selectedIndex].value;
+        builder: (context, states) {
+          final state = states[selectedIndex].cast<int>();
           return ShowCounterTest(value: state);
         },
         subjectsGetter: (BuildContext context) {
@@ -89,6 +89,49 @@ void main() {
         },
       ),
     );
+
+    final textFinder = find.text(expectedText);
+    expect(textFinder, findsOne);
+  });
+
+  testWidgets("handle next state of new subjects", (tester) async {
+    int selectedIndex = (subjectsCount / 2).floor();
+    final newSubjects = List.generate(
+        subjectsCount, (index) => BehaviorSubject.seeded(index + 100));
+    const toBeInsertedValue = -100;
+    final expectedText = toBeInsertedValue.toString();
+
+    addTearDown(() {
+      for (var element in newSubjects) {
+        element.close();
+      }
+    });
+
+    await tester.pumpWidget(
+      MultiRxBuilder(
+        builder: (context, states) {
+          final state = states[selectedIndex].cast<int>();
+          return ShowCounterTest(value: state);
+        },
+        subjectsGetter: (BuildContext context) {
+          return subjects;
+        },
+      ),
+    );
+    await tester.pumpWidget(
+      MultiRxBuilder(
+        builder: (context, states) {
+          final state = states[selectedIndex].cast<int>();
+          return ShowCounterTest(value: state);
+        },
+        subjectsGetter: (BuildContext context) {
+          return newSubjects;
+        },
+      ),
+    );
+
+    newSubjects[selectedIndex].add(toBeInsertedValue);
+    await tester.pump();
 
     final textFinder = find.text(expectedText);
     expect(textFinder, findsOne);

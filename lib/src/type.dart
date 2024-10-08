@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:inherited_rxdart/src/holder.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Signature for event handler of registered [Subject]s inside [BaseViewModel]
@@ -32,5 +33,7 @@ typedef RxBehaviorSubjectGetter<T> = BehaviorSubject<T> Function(
 typedef RxValueSelector<T, V> = V Function(BuildContext context, T state);
 
 /// Signature for retrieving multiple [Stream] to subscribe to.
-typedef RxMultiSubjectsGetter = List<Stream<dynamic>> Function(
+typedef RxMultiSubjectsGetter = List<BehaviorSubject<Object?>> Function(
     BuildContext context);
+typedef RxMultiSubjectsBuilder = Widget Function(
+    BuildContext context, List<Holder> states);
